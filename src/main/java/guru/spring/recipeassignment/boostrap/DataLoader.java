@@ -177,6 +177,9 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         spicyGrilledChickenTacos.addIngredient(new Ingredient("olive oil", new BigDecimal(2),tablespoonUom,spicyGrilledChickenTacos));
         spicyGrilledChickenTacos.addIngredient(new Ingredient("boneless chicken thighs", new BigDecimal(4),eachUom,spicyGrilledChickenTacos));
 
+        spicyGrilledChickenTacos.setUrl("https://www.simplyrecipes.com/recipes/spicy_grilled_chicken_tacos/#ixzz4jvtrAnNm");
+        spicyGrilledChickenTacos.setServings(4);
+        spicyGrilledChickenTacos.setSource("Simply Recipes");
 
         recipes.add(spicyGrilledChickenTacos);
 
@@ -229,6 +232,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
 
         recipes.add(guacamole);
+
+
 
         return  recipes;
     }
