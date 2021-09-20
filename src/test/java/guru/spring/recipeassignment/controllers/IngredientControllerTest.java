@@ -2,8 +2,10 @@ package guru.spring.recipeassignment.controllers;
 
 import guru.spring.recipeassignment.commands.IngredientCommand;
 import guru.spring.recipeassignment.commands.RecipeCommand;
+import guru.spring.recipeassignment.domain.UnitOfMeasure;
 import guru.spring.recipeassignment.services.IngredientService;
 import guru.spring.recipeassignment.services.RecipeService;
+import guru.spring.recipeassignment.services.UnitOfMeasureService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -23,8 +28,12 @@ class IngredientControllerTest {
 
     @Mock
     RecipeService recipeService;
+
     @Mock
     IngredientService ingredientService;
+
+    @Mock
+    UnitOfMeasureService unitOfMeasureService;
 
     @InjectMocks
     IngredientController controller;
@@ -68,6 +77,25 @@ class IngredientControllerTest {
                 .andExpect(view().name("recipe/ingredient/show"))
                 .andExpect(model().attributeExists("ingredient"));
 
+
+    }
+
+    @Test
+    public void testUpdateRecipeIngredient() throws Exception {
+        //given
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setId(2L);
+
+        when(ingredientService.findByRecipeIdAndIngredientId(anyLong(),anyLong())).thenReturn(ingredientCommand);
+
+        when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+
+        //then
+        mockMvc.perform(get("/recipe/1/ingredient/2/update"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/ingredient/ingredientform"))
+                .andExpect(model().attributeExists("ingredient"))
+                .andExpect(model().attributeExists("uomList"));
 
     }
 
