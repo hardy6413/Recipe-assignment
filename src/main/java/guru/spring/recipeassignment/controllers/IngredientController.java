@@ -1,6 +1,8 @@
 package guru.spring.recipeassignment.controllers;
 
 import guru.spring.recipeassignment.commands.IngredientCommand;
+import guru.spring.recipeassignment.commands.RecipeCommand;
+import guru.spring.recipeassignment.commands.UnitOfMeasureCommand;
 import guru.spring.recipeassignment.services.IngredientService;
 import guru.spring.recipeassignment.services.RecipeService;
 import guru.spring.recipeassignment.services.UnitOfMeasureService;
@@ -62,5 +64,31 @@ public class IngredientController {
         log.debug("saved ingredient id: "+savedCommand.getId());
 
         return "redirect:/recipe/"+savedCommand.getRecipeId()+"/ingredient/"+savedCommand.getId()+"/show";
+    }
+
+    @GetMapping
+    @RequestMapping("/recipe/{recipeId}/ingredient/new")
+    public String newIngredient(@PathVariable String recipeId, Model model){
+        RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
+        //todo raise exception if null
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(Long.valueOf(recipeId));
+        model.addAttribute("ingredient", ingredientCommand);
+
+        //init
+        ingredientCommand.setUnitOfMeasureCommand(new UnitOfMeasureCommand());
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+
+        return "recipe/ingredient/ingredientform";
+    }
+
+    @GetMapping
+    @RequestMapping("/recipe/{recipeId}/ingredient/{ingredientId}/delete")
+    public String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingredientId){
+        log.debug("deleting ingredient id: " + ingredientId);
+
+        ingredientService.deleteById(Long.valueOf(recipeId), Long.valueOf(ingredientId));
+
+        return "redirect:/recipe/"+recipeId+"/ingredients";
     }
 }
